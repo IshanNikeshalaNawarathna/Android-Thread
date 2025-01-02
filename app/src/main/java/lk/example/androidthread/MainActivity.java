@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,20 +24,45 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("Android Thred","Button Case 01 onClick");
-            }
+       button.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
 
+               Log.i("Thread","Button Case 1");
 
-            for (int i = 0;i<=10;i++){
+               for (int i =0;i<=10;i++){ // UI thread block
+                   TextView textView = findViewById(R.id.textView);
+                   textView.setText(String.valueOf(i));
 
-            }
+                   try {
+                       Thread.sleep(1000);
+                   } catch (InterruptedException e) {
+                       throw new RuntimeException(e);
+                   }
 
-        });
+               }
+
+               Thread t = new Thread(){ // block the Android Tool kit
+                   @Override
+                   public void run() {
+                       for (int i =0;i<=10;i++){
+                           TextView textView = findViewById(R.id.textView);
+                           textView.setText(String.valueOf(i));
+
+                           try {
+                               Thread.sleep(1000);
+                           } catch (InterruptedException e) {
+                               throw new RuntimeException(e);
+                           }
+
+                       }
+                   }
+
+               };t.start();
+
+           }
+       });
 
     }
 }
