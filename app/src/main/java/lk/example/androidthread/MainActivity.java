@@ -31,25 +31,48 @@ public class MainActivity extends AppCompatActivity {
 
                Log.i("Thread","Button Case 1");
 
-               for (int i =0;i<=10;i++){ // UI thread block
-                   TextView textView = findViewById(R.id.textView);
-                   textView.setText(String.valueOf(i));
+//               for (int i =0;i<=10;i++){ // UI thread block
+//                   TextView textView = findViewById(R.id.textView);
+//                   textView.setText(String.valueOf(i));
+//
+//                   try {
+//                       Thread.sleep(1000);
+//                   } catch (InterruptedException e) {
+//                       throw new RuntimeException(e);
+//                   }
+//
+//               }
 
-                   try {
-                       Thread.sleep(1000);
-                   } catch (InterruptedException e) {
-                       throw new RuntimeException(e);
-                   }
+//               Thread t = new Thread(){ // block the Android Tool kit
+//                   @Override
+//                   public void run() {
+//                       for (int i =0;i<=10;i++){
+//                           TextView textView = findViewById(R.id.textView);
+//                           textView.setText(String.valueOf(i));
+//
+//                           try {
+//                               Thread.sleep(1000);
+//                           } catch (InterruptedException e) {
+//                               throw new RuntimeException(e);
+//                           }
+//
+//                       }
+//                   }
+//
+//               };t.start();
 
-               }
-
-               Thread t = new Thread(){ // block the Android Tool kit
+               Thread t = new Thread(){ // solutions
                    @Override
                    public void run() {
                        for (int i =0;i<=10;i++){
-                           TextView textView = findViewById(R.id.textView);
-                           textView.setText(String.valueOf(i));
-
+                           final int x = i;
+                           runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   TextView textView = findViewById(R.id.textView);
+                                   textView.setText(String.valueOf(x));
+                               }
+                           });
                            try {
                                Thread.sleep(1000);
                            } catch (InterruptedException e) {
